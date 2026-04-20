@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Survival: Culinary Crisis (4-Min Presentation Edition)</title>
+    <style>
+        :root { --bg-color: #fff; --text-color: #000; --glass-bg: rgba(0, 0, 0, 0.04); --border-radius: 15px; --danger: #ff0000; }
+        body, html { margin: 0; padding: 0; height: 100%; background-color: var(--bg-color); color: var(--text-color); font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; display: flex; justify-content: center; align-items: center; overflow: hidden; background-image: url("data:image/svg+xml,%3Csvg width='800' height='800' viewBox='0 0 800 800' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 700 C 120 620, 180 780, 250 700 S 350 550, 400 600 S 550 750, 650 700 M150 700 L150 550 Q 200 500, 250 550 L250 700 M170 550 L230 550 M200 450 Q 200 350, 200 300 L200 250 M170 250 L230 250 M550 200 Q 600 150, 650 200 M600 700 L650 700 Q 680 640, 650 580 L600 580 Q 570 640, 600 700 M625 580 L625 450 M550 350 Q 625 280, 700 350 M625 350 C 600 300, 650 250, 625 200' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-opacity='0.12'/%3E%3C/svg%3E"); background-size: 700px 700px; }
+        #start-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255,255,255,0.98); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 100; transition: opacity 0.8s ease; }
+        @keyframes wiggle { 0%, 100% { transform: translateY(0px) rotate(0deg); } 20% { transform: translateY(-35px) rotate(-8deg); } 40% { transform: translateY(5px) rotate(4deg); } }
+        #survival-title { font-size: 95px; font-weight: 900; letter-spacing: -5px; margin-bottom: 60px; display: flex; color: #000; }
+        #survival-title span { display: inline-block; animation: wiggle 2.8s infinite ease-in-out; }
+        #survival-title span:nth-child(1) { animation-delay: 0.0s; } #survival-title span:nth-child(2) { animation-delay: 0.1s; } #survival-title span:nth-child(3) { animation-delay: 0.2s; } #survival-title span:nth-child(4) { animation-delay: 0.3s; } #survival-title span:nth-child(5) { animation-delay: 0.4s; } #survival-title span:nth-child(6) { animation-delay: 0.5s; } #survival-title span:nth-child(7) { animation-delay: 0.6s; } #survival-title span:nth-child(8) { animation-delay: 0.7s; }
+        #start-btn { font-size: 16px; text-transform: uppercase; letter-spacing: 4px; color: #fff; background: #000; border: none; border-radius: 50px; padding: 20px 70px; cursor: pointer; transition: all 0.3s ease; }
+        #game-container { width: 90%; max-width: 850px; padding: 45px; background: rgba(255, 255, 255, 0.94); border: 1px solid #eee; border-radius: var(--border-radius); opacity: 0; transition: opacity 0.8s ease; visibility: hidden; box-shadow: 0 25px 50px rgba(0,0,0,0.06); }
+        .header { display: flex; justify-content: space-between; border-bottom: 2px solid #000; padding-bottom: 25px; margin-bottom: 30px; }
+        .stat-box { text-align: center; }
+        .stat-label { font-size: 9px; color: #777; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+        .stat-value { font-size: 24px; font-weight: bold; font-family: 'Courier New', monospace; }
+        .analyst-brief { font-size: 13px; color: #444; border-left: 4px solid #000; padding: 12px 18px; margin-bottom: 25px; line-height: 1.6; font-style: italic; background: #fcfcfc; }
+        .event-text { font-size: 18px; line-height: 1.8; margin-bottom: 35px; color: #111; }
+        .options-container { display: flex; flex-direction: column; gap: 18px; }
+        .option-btn { background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(0,0,0,0.08); color: #111; padding: 25px; text-align: left; cursor: pointer; border-radius: var(--border-radius); transition: all 0.3s ease; }
+        .option-btn:hover:not(:disabled) { background: rgba(0,0,0,0.07); border-color: #000; transform: translateX(10px); }
+        .option-btn:disabled { opacity: 0.2; cursor: not-allowed; }
+        .option-btn strong { display: block; font-size: 15px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: #000; }
+        .option-btn p { margin: 0; font-size: 14px; color: #555; line-height: 1.5; }
+        .case-card { background: #000; color: #fff; padding: 35px; border-radius: var(--border-radius); margin-top: 25px; text-align: left; max-height: 450px; overflow-y: auto; }
+        .lesson-box { margin-top: 25px; background: #1a1a1a; padding: 20px; border-radius: 10px; border-left: 3px solid #fff; }
+        @keyframes panic { 0% { box-shadow: inset 0 0 0px #f00; } 50% { box-shadow: inset 0 0 70px rgba(255, 0, 0, 0.18); } 100% { box-shadow: inset 0 0 0px #f00; } }
+        .panic-mode { animation: panic 1.2s infinite ease-in-out; }
+        .critical { color: var(--danger) !important; font-weight: 900; }
+    </style>
+</head>
+<body id="main-body">
+
+<div id="start-screen">
+    <div id="survival-title"><span>S</span><span>u</span><span>r</span><span>v</span><span>i</span><span>v</span><span>a</span><span>l</span></div>
+    <button id="start-btn" onclick="startGame()">Start Simulation</button>
+</div>
+
+<div id="game-container">
+    <div class="header">
+        <div class="stat-box"><div class="stat-label">Time Remaining</div><div id="timer" class="stat-value">04:00</div></div>
+        <div class="stat-box"><div class="stat-label">Cash 💰</div><div id="cash" class="stat-value">100</div></div>
+        <div class="stat-box"><div class="stat-label">Brand ⭐</div><div id="brand" class="stat-value">100</div></div>
+        <div class="stat-box"><div class="stat-label">Morale 👥</div><div id="morale" class="stat-value">100</div></div>
+    </div>
+    <div id="game-content">
+        <div id="event-title" style="font-size:10px; color:#999; text-transform:uppercase; margin-bottom:8px; font-weight:bold; letter-spacing:2px;"></div>
+        <div id="analyst-brief" class="analyst-brief"></div>
+        <div id="event-text" class="event-text"></div>
+        <div id="options" class="options-container"></div>
+    </div>
+</div>
+
+<script>
+    // 时间缩短为 240 秒 (4分钟)
+    let cash = 100, brand = 100, morale = 100, timeLeft = 240, currentStep = 0, gameStarted = false;
+    const fixedBurnRate = 8; 
+
+    const caseData = {
+        emp: { 
+            name: "Eleven Madison Park (The Visionary)", 
+            desc: "In early 2020, Daniel Humm transformed the world's most elite restaurant into a commissary kitchen for healthcare workers, producing 3,000 meals daily. This deep investment in 'Social Capital' allowed them to reopen with a radical 100% plant-based menu. Despite losing some traditionalists, they gained global acclaim as climate leaders, proving that brand values can drive a total business transformation.", 
+            lesson: "Strategic Paradigm Shift: In a crisis, the most 'costly' moral choice often builds the highest brand equity. EMP utilized the pandemic as a catalyst for a sustainability-led transformation." 
+        },
+        canlis: { 
+            name: "Canlis (The Agile Survivor)", 
+            desc: "The 70-year-old Seattle landmark famously stated: 'Fine dining is not what the city needs right now.' They dismantled their prestige to launch a burger drive-thru, a bagel shop, and even a community college. By pivoting their operations over a dozen times, they kept every staff member employed and maintained liquidity while their peers collapsed. Their humility became their greatest strength.", 
+            lesson: "Operational Agility & VUCA Management: Survival requires 'Ambidexterity'—the ability to simultaneously protect core values while radically shifting service models. Canlis proved brand identity is about people, not tablecloths." 
+        },
+        gotham: { 
+            name: "Gotham Bar & Grill (The Tragic Rigid)", 
+            desc: "A New York legend for 36 years. Gotham failed to move with the necessary speed when the shutdown hit. Burdened by massive fixed rent and a structural identity tied to grand in-person dining, they were unable to pivot to lean takeout models. They announced permanent closure in March 2020, just days after the ban. Their fall sent shockwaves through the industry as a warning of how legacy can become a liability.", 
+            lesson: "Path Dependency & Structural Rigidity: Success breeds a refusal to change. Gotham's inability to lower its cost base or dismantle its legacy service led to a classic liquidity trap during a black swan event." 
+        }
+    };
+
+    const events = [
+        {
+            title: "STAGE 01: ANTICIPATION (Feb 2020)",
+            brief: "Advisor: Cancellation rates are creeping up. Supply chains for PPE are tightening rapidly.",
+            text: "A $20,000 order for premium dry-aged beef arrives tomorrow. News reports suggest a global pandemic is imminent. What is your move?",
+            options: [
+                { title: "Risk Mitigation", text: "Cancel 50% of the inventory order immediately. We will pay the contract penalty but keep our cash liquid for emergency medical supplies.", dc: { c: -5, b: -5, m: 0 } },
+                { title: "Brand Consistency", text: "Keep the full order. Our reputation is built on unwavering quality. We must stay ready to serve the highest standard to our loyal guests.", dc: { c: -10, b: 5, m: 0 } },
+                { title: "Passive Observation", text: "Take no action for now. Let the order arrive as planned. Avoid waste of money on penalty fees.", dc: { c: -15, b: 0, m: -10 } }
+            ]
+        },
+        {
+            title: "STAGE 02: THE SHUTDOWN (Mar 2020)",
+            brief: "Operations Chief: Indoor dining is banned effectively tonight. All revenue streams have vanished. We have $50k in perishables rotting.",
+            text: "The government has closed our doors. We still have to pay rent. How do we pivot our business model to survive?",
+            options: [
+                { title: "Strategic Downgrade", text: "Dismantle the fine-dining service and launch a high-volume burger takeout window. It keeps the kitchen busy and cash flowing.", dc: { c: 15, b: -25, m: 10 } },
+                { title: "Prestige Hibernation", text: "Shut down completely. Refuse to do 'cheap' takeout to protect the brand's luxury image. Rely on government loans.", dc: { c: -30, b: 10, m: -25 } },
+                { title: "Social Impact Gamble", text: "Transform the kitchen into a non-profit center. Cook inventory into meals for healthcare workers. Burn cash for brand respect.", dc: { c: -40, b: 45, m: 45 } }
+            ]
+        },
+        {
+            title: "STAGE 03: LIQUIDITY CRISIS (Apr 2020)",
+            brief: "Finance Chief: The bank account is nearly empty. The landlord is refusing any rent relief. Staff are worried.",
+            text: "We need an immediate injection of capital to survive the week. How do you find the funds?",
+            options: [
+                { title: "Advanced Capacity Sale", text: "Sell discounted 'Gift Cards'—customers pay us now and get a table next year. Quick cash, future liability.", dc: { c: 45, b: -5, m: 5 } },
+                { title: "Asset Liquidation", text: "Sell our rare vintage wine collection at a fire-sale price. It's the 'soul' of the restaurant, but we need liquidity.", dc: { c: 65, b: -15, m: 0 } },
+                { title: "Financial Leverage", text: "Take a private high-interest emergency loan. A dangerous debt trap, but it ensures staff get paid tonight.", dc: { c: 85, b: 0, m: -20 } }
+            ]
+        },
+        {
+            title: "STAGE 04: SUPPLY CHAIN COLLAPSE (May 2020)",
+            brief: "Market Report: Meat plants are closing. Beef prices jumped 300%. Every steak sold is now a net loss.",
+            text: "Our core product is no longer profitable. How do we adapt our menu?",
+            options: [
+                { title: "Root-to-Stalk Innovation", text: "Remove meat entirely. Use creative, low-cost local vegetables for high-margin dishes. Save money and innovate.", dc: { c: -5, b: 15, m: 10 } },
+                { title: "Cost Transfer (Surcharge)", text: "Maintain the menu but add a 35% 'Pandemic Recovery Surcharge' to every guest bill.", dc: { c: 30, b: -35, m: -10 } },
+                { title: "Strategic Contraction", text: "Open for 2 days a week for VIPs only. Minimizes labor and utility costs while keeping a small revenue stream.", dc: { c: -25, b: -10, m: -25 } }
+            ]
+        },
+        {
+            title: "STAGE 05: THE TALENT WAR (Aug 2020)",
+            brief: "HR Director: Our team is resilient, but other industries are poaching them. Headhunters are targeting our Head Chef.",
+            text: "Our employees are facing mental pressure. Without core talent, we never recover quality. How to keep them?",
+            options: [
+                { title: "Equity and Incentives", text: "Offer bonuses and a share of future profits. Binds them to our success, though it drains cash reserves.", dc: { c: -25, b: 5, m: 50 } },
+                { title: "Command and Control", text: "Demand loyalty and remind them 'no one else is hiring'. Push for 100% effort or replace them.", dc: { c: 0, b: -20, m: -60 } },
+                { title: "Managed Attrition", text: "Allow the stars to leave. Hire cheaper, junior replacements. Focus on wage savings and retrain later.", dc: { c: -10, b: -15, m: -30 } }
+            ]
+        },
+        {
+            title: "STAGE 06: STRATEGIC SHIFT (May 2021)",
+            brief: "Trend Analyst: Markets are reopening. Sustainability and planetary health are the new drivers of luxury spend.",
+            text: "Do you return to the 'Old Glory' of 2019, or fundamentally pivot your identity for a new era?",
+            options: [
+                { title: "Pragmatic Hybrid Model", text: "Keep takeout burgers for cash while reopening the luxury dining room for status. Balanced, low-risk strategy.", dc: { c: 25, b: -10, m: 10 } },
+                { title: "Classic Restoration", text: "Perform a full renovation. Erase all signs of 'cheap' takeout and relaunch as a bastion of ultra-luxury.", dc: { c: -50, b: 30, m: -10 } },
+                { title: "Radical Paradigm Rebirth", text: "Go 100% plant-based fine-dining. Lose old steak-lovers, but gain global status as the ultimate sustainable brand.", dc: { c: -35, b: 55, m: 25 } }
+            ]
+        },
+        {
+            title: "STAGE 07: AGILITY TEST (Dec 2021)",
+            brief: "Crisis Report: Omicron variant hits. All festive bookings cancelled. Logistics are failing again.",
+            text: "The market has crashed again. We have festive inventory at risk. How to save it?",
+            options: [
+                { title: "The At-Home Experience", text: "Immediately pack holiday ingredients into high-end DIY 'Meal Boxes'. Sell them with online cooking classes.", dc: { c: 25, b: 10, m: 15 } },
+                { title: "Social Advocacy", text: "Lead a social media protest against lockdowns. Pressure government to stay open despite the surge.", dc: { c: 0, b: -45, m: -10 } },
+                { title: "Total Defensive Freeze", text: "Shut down instantly. Save all variable costs. Hibernate until the wave passes.", dc: { c: -40, b: -20, m: -45 } }
+            ]
+        },
+        {
+            title: "STAGE 08: THE ENDGAME (Feb 2022)",
+            brief: "Strategic Brief: The storm has ended. Choose your permanent legacy.",
+            text: "Final Strategy phase: Fixed costs are waived for this final decision.",
+            options: [
+                { title: "Digital & Margin Focus", text: "Invest in AI ordering and automated kitchen tech to maximize profit margins. (Needs Cash > 10)", dc: { c: 0, b: 15, m: 15 }, req: (currCash) => currCash > 10 },
+                { title: "Human Craft Focus", text: "Focus exclusively on premium, 1-on-1 human service. (Needs Brand > 100).", dc: { c: 0, b: 20, m: 20 }, req: (currCash) => brand > 100 && currCash > 10 },
+                { title: "Strategic Exit", text: "Accept a corporate buyout offer. Exit with cash, but the brand belongs to a conglomerate now.", dc: { c: 50, b: -60, m: -60 }, req: (currCash) => true }
+            ]
+        }
+    ];
+
+    function startGame() { gameStarted = true; document.getElementById('start-screen').style.opacity = '0'; setTimeout(() => { document.getElementById('start-screen').style.visibility = 'hidden'; document.getElementById('game-container').style.opacity = '1'; document.getElementById('game-container').style.visibility = 'visible'; renderEvent(); }, 800); }
+    
+    function updateStats() { 
+        document.getElementById('cash').innerText = Math.round(cash); 
+        document.getElementById('brand').innerText = Math.round(brand); 
+        document.getElementById('morale').innerText = Math.round(morale); 
+        if(cash <= 0 || brand <= 0 || morale <= 0) endGame("FAILURE", "gotham"); 
+    }
+
+    function renderEvent() { 
+        if(!gameStarted || currentStep >= events.length) return; 
+        const e = events[currentStep]; 
+        document.getElementById('event-title').innerText = e.title; 
+        document.getElementById('analyst-brief').innerHTML = e.brief; 
+        document.getElementById('event-text').innerText = e.text; 
+        const optCont = document.getElementById('options'); 
+        optCont.innerHTML = ''; 
+        e.options.forEach(o => { 
+            const btn = document.createElement('button'); 
+            btn.className = 'option-btn'; 
+            btn.innerHTML = `<strong>${o.title}</strong><p>${o.text}</p>`; 
+            if (o.req && !o.req(cash)) { btn.disabled = true; }
+            btn.onclick = () => { 
+                let burn = (currentStep === 7) ? 0 : fixedBurnRate;
+                cash += (o.dc.c - burn); 
+                brand += o.dc.b; 
+                morale += o.dc.m; 
+                currentStep++; 
+                if (currentStep > 7) { 
+                    let profileKey = "canlis";
+                    if(brand > 140 && morale > 110 && cash > 10) profileKey = "emp"; 
+                    else if(cash <= 10) profileKey = "gotham"; 
+                    endGame(null, profileKey);
+                } else {
+                    updateStats(); 
+                    renderEvent(); 
+                }
+            }; 
+            optCont.appendChild(btn); 
+        }); 
+    }
+
+    function timer() { 
+        if(!gameStarted) return; 
+        timeLeft--; 
+        const min = Math.floor(timeLeft / 60); const sec = timeLeft % 60; 
+        const disp = document.getElementById('timer'); 
+        disp.innerText = `${min.toString().padStart(2,'0')}:${sec.toString().padStart(2,'0')}`; 
+        if(timeLeft < 60) { disp.classList.add('critical'); document.getElementById('main-body').classList.add('panic-mode'); } 
+        if(timeLeft <= 0) endGame("TIMEOUT", "gotham"); 
+    }
+
+    function endGame(manualMsg, profileKey) { 
+        clearInterval(timerInterval); gameStarted = false; document.getElementById('main-body').classList.remove('panic-mode'); 
+        const data = caseData[profileKey]; 
+        let title = manualMsg || (profileKey === 'emp' ? "LEGENDARY PERFORMANCE" : (profileKey === 'canlis' ? "RESILIENT SURVIVAL" : "STRATEGIC TRAGEDY")); 
+        document.getElementById('game-content').innerHTML = `
+            <h1 style="border-bottom: 2px solid #000; padding-bottom: 12px; margin-bottom:25px;">${title}</h1>
+            <div class="case-card">
+                <h3 style="margin-top:0; color:white; border-bottom: 1px solid #444; padding-bottom:12px;">Case Study: ${data.name}</h3>
+                <p style="color:#ddd; font-size:14px; line-height:1.7; margin-top:18px;">${data.desc}</p>
+                <div class="lesson-box">
+                    <p style="margin:0; font-weight:bold; color:white; font-size:14px;">Academic Review:</p>
+                    <p style="margin-top:12px; font-size:13px; color:#ccc;">${data.lesson}</p>
+                </div>
+            </div>
+            <button onclick="location.reload()" class="option-btn" style="text-align:center; margin-top:35px; border-color:#000; width:100%; font-weight:bold;">RESTART SIMULATION</button>`; 
+    }
+    const timerInterval = setInterval(timer, 1000);
+</script>
+</body>
+</html>
